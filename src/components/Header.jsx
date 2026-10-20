@@ -50,25 +50,25 @@ export default function Header() {
   )
 
   return (
-    <header className="sticky top-0 z-50 bg-navy max-lg:px-5 lg:px-20">
-      <div className="flex h-20 items-center justify-between lg:h-25">
-        <a href="#top" className="flex items-center gap-3 lg:gap-4" onClick={() => setOpen(false)}>
+    <header className="sticky top-0 z-50 bg-navy max-lg:px-5 lg:px-10 2xl:px-20">
+      <div className="flex h-20 items-center justify-between gap-6 lg:h-25">
+        <a href="#top" className="flex shrink-0 items-center gap-3 lg:gap-4" onClick={() => setOpen(false)}>
           <img src={logo} alt="Wine Collection of Georgia" className="size-10 rounded-full lg:size-12" />
           {/* Brand name keeps its own font in every language */}
-          <span className="hidden font-brand text-base font-semibold text-gold sm:block lg:text-xl">
+          <span className="hidden font-brand text-base font-semibold text-gold min-[500px]:block lg:hidden xl:block 2xl:text-xl">
             Wine Collection of Georgia
           </span>
         </a>
 
-        <nav aria-label="Main" className="hidden items-center gap-10 text-xs font-semibold uppercase text-gold font-features-['case'] lg:flex">
+        <nav aria-label="Main" className="hidden items-center gap-6 text-xs 2xl:gap-10 font-semibold uppercase text-gold font-features-['case'] lg:flex">
           {links.map((l) => (
-            <a key={l.id} href={`#${l.id}`} className="hover:text-white">
+            <a key={l.id} href={`#${l.id}`} className="whitespace-nowrap hover:text-white">
               {t(`NAVIGATION.${l.key}`)}
             </a>
           ))}
         </nav>
 
-        <div className="flex items-center gap-5">
+        <div className="flex shrink-0 items-center gap-5">
           {/* href to be added */}
           <a
             href="#"
@@ -76,7 +76,7 @@ export default function Header() {
           >
             {t('NAVIGATION.CATALOG')}
           </a>
-          {langSwitcher}
+          <div className="max-lg:hidden">{langSwitcher}</div>
           <button
             className="flex size-8 cursor-pointer flex-col items-center justify-center gap-1.5 lg:hidden"
             onClick={() => setOpen((o) => !o)}
@@ -110,6 +110,12 @@ export default function Header() {
             {t(`NAVIGATION.${l.key}`)}
           </a>
         ))}
+        <div
+          style={{ transitionDelay: open ? `${150 + links.length * 70}ms` : '0ms' }}
+          className={`mt-4 transition-all duration-500 ${open ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0'}`}
+        >
+          {langSwitcher}
+        </div>
       </nav>
     </header>
   )

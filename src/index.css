@@ -33,6 +33,9 @@
 }
 
 @theme {
+  /* text-xs is 14px across the app (Tailwind default is 12px) */
+  --text-xs: 0.875rem;
+  --text-xs--line-height: calc(1.25 / 0.875);
   --color-navy: #0f2a4a;
   --color-navy-light: #1e3d5e;
   --color-gold: #c9a227;
