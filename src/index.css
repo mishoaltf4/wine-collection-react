@@ -1,0 +1,59 @@
+/* Playfair + Inter are loaded with <link> tags in index.html (faster than CSS @import) */
+@import "tailwindcss";
+
+@font-face {
+  font-family: 'Noto Sans Georgian';
+  src: url('./assets/fonts/NotoSansGeorgian-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Noto Sans Georgian';
+  src: url('./assets/fonts/NotoSansGeorgian-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Noto Sans Georgian';
+  src: url('./assets/fonts/NotoSansGeorgian-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Noto Sans Georgian';
+  src: url('./assets/fonts/NotoSansGeorgian-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Noto Sans Georgian';
+  src: url('./assets/fonts/NotoSansGeorgian-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-display: swap;
+}
+
+@theme {
+  --color-navy: #0f2a4a;
+  --color-navy-light: #1e3d5e;
+  --color-gold: #c9a227;
+  --color-muted: #5f7495;
+  --color-fog: #e3e3e3;
+  --font-display: 'Playfair', serif;
+  --font-sans: 'Inter', system-ui, sans-serif;
+  /* Company name: same font in every language */
+  --font-brand: 'Noto Sans Georgian', sans-serif;
+}
+
+/* Georgian uses the bundled Noto Sans Georgian for both text and headings */
+html[lang='ka'] {
+  --font-display: 'Noto Sans Georgian', sans-serif;
+  --font-sans: 'Noto Sans Georgian', sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+section[id] {
+  scroll-margin-top: 80px;
+}
