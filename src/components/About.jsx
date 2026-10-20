@@ -1,10 +1,27 @@
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { pastEvents, pillars } from '../data/home'
+import { MONTH_KEYS, pillars } from '../data/home'
+import { localize, pastOf, useEvents } from '../events'
+import { useLang } from '../lang'
 import SectionBackground from './SectionBackground'
 import Divider from './Divider'
 
+// Past events per carousel page: 2 per row, 2 rows
+const PAGE_SIZE = 4
+
+const arrow = 'flex size-10 cursor-pointer items-center justify-center rounded-full border border-gold text-gold transition hover:bg-gold hover:text-navy disabled:cursor-default disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-gold'
+
 export default function About() {
   const { t } = useTranslation()
+  const { lang } = useLang()
+  const past = pastOf(useEvents()).map((e) => localize(e, lang))
+  const [page, setPage] = useState(0)
+  const pages = Math.max(1, Math.ceil(past.length / PAGE_SIZE))
+  const current = Math.min(page, pages - 1)
+  const chunks = Array.from({ length: pages }, (_, i) => past.slice(i * PAGE_SIZE, (i + 1) * PAGE_SIZE))
+  const monthName = (m) => t(`MONTHS.${MONTH_KEYS[m]}`)
+  // "28 June, 2025 • Batumi, Georgia"
+  const dateLine = (e) => [`${e.day} ${monthName(e.month)}, ${e.year}`, e.place].filter(Boolean).join(' • ')
 
   return (
     <section id="about" className="relative overflow-hidden bg-white px-5 py-16 md:px-10 lg:py-20">
@@ -34,30 +51,49 @@ export default function About() {
 
         <h3 data-aos="fade-up" className="mt-4 title-sm font-display leading-[1.4] text-white">{t('PAST_EVENTS.TITLE')}</h3>
 
-        <div className="grid gap-5 md:grid-cols-2">
-          {pastEvents.map((e, i) => {
-            const item = `PAST_EVENTS.PAST_EVENTS_LIST.${e.key}`
-            return (
-              <article
-                key={e.key}
-                data-aos="fade-up"
-                data-aos-delay={(i % 2) * 150}
-                className="overflow-hidden rounded-sm bg-white/10 shadow-[0_4px_16px_rgba(15,42,74,0.08)]"
+        <div data-aos="fade-up">
+          {/* From md up, all pages share one grid cell, so the section is as tall as the fullest page and never jumps */}
+          <div className="grid">
+            {chunks.map((chunk, pi) => (
+              <div
+                key={pi}
+                aria-hidden={pi !== current}
+                inert={pi !== current}
+                className={`col-start-1 row-start-1 content-start gap-5 md:grid md:grid-cols-2 ${pi === current ? 'grid' : 'hidden md:invisible'}`}
               >
-                <img
-                  src={e.image}
-                  alt={t(`${item}.TITLE`)}
-                  loading="lazy"
-                  decoding="async"
-                  className="h-60 w-full object-cover"
-                />
-                <div className="flex flex-col gap-3 p-5">
-                  <p className="text-[10px] font-bold uppercase text-fog">{t(`${item}.DATE`)}</p>
-                  <h4 className="font-display text-[22px] font-semibold leading-[1.2] text-gold">{t(`${item}.TITLE`)}</h4>
-                </div>
-              </article>
-            )
-          })}
+                {chunk.map((e) => (
+                  <article key={e.id} className="overflow-hidden rounded-sm bg-white/10 shadow-[0_4px_16px_rgba(15,42,74,0.08)]">
+                    <img src={e.image} alt={e.title} loading="lazy" decoding="async" className="h-60 w-full object-cover" />
+                    <div className="flex flex-col gap-3 p-5">
+                      <p className="text-[10px] font-bold uppercase text-fog">{dateLine(e)}</p>
+                      <h4 className="font-display text-[22px] font-semibold leading-[1.2] text-gold">{e.title}</h4>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            ))}
+          </div>
+
+          {pages > 1 && (
+            <div className="mt-8 flex items-center justify-center gap-6">
+              <button className={arrow} onClick={() => setPage(current - 1)} disabled={current === 0} aria-label="Previous">
+                ‹
+              </button>
+              <div className="flex gap-2">
+                {Array.from({ length: pages }, (_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setPage(i)}
+                    aria-label={`Page ${i + 1}`}
+                    className={`size-2 cursor-pointer rounded-full ${i === current ? 'bg-gold' : 'bg-white/30'}`}
+                  />
+                ))}
+              </div>
+              <button className={arrow} onClick={() => setPage(current + 1)} disabled={current === pages - 1} aria-label="Next">
+                ›
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </section>

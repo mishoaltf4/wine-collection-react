@@ -13,16 +13,40 @@ const SITE = (process.env.VITE_SITE_URL || env.VITE_SITE_URL || 'https://example
 const template = await fs.readFile(path.join(root, 'dist/index.html'), 'utf8')
 const { render } = await import(pathToFileURL(path.join(root, 'dist-server/entry-server.js')).href)
 
+// Events come from the backend; if it is unreachable the pages are built without events
+// (the client still loads them from the API at runtime)
+const API = (process.env.VITE_API_URL || env.VITE_API_URL || 'http://localhost:3000').replace(/\/$/, '')
+let events = []
+try {
+  const res = await fetch(`${API}/api/events`)
+  if (!res.ok) throw new Error(`HTTP ${res.status}`)
+  events = await res.json()
+  console.log(`fetched ${events.length} events from ${API}`)
+} catch (err) {
+  console.warn(`! Could not fetch events from ${API} (${err.message}) - prerendering without events`)
+}
+// '<' escaped so the JSON can never close the script tag
+const eventsScript = `<script>window.__EVENTS__=${JSON.stringify(events).replace(/</g, '\\u003c')}</script>`
+
 for (const lang of LANGS) {
-  const { html, head } = render(lang)
+  const { html, head } = render(lang, events)
   const page = template
     .replace('<html lang="ka">', () => `<html lang="${lang}">`)
-    .replace('<!--app-head-->', () => head)
+    .replace('<!--app-head-->', () => `${head}\n    ${eventsScript}`)
     .replace('<!--app-html-->', () => html)
   await fs.mkdir(path.join(root, 'dist', lang), { recursive: true })
   await fs.writeFile(path.join(root, 'dist', lang, 'index.html'), page)
   console.log(`prerendered /${lang}/`)
 }
+
+// Admin panel: client-only shell at /admin/, kept out of search engines
+await fs.mkdir(path.join(root, 'dist/admin'), { recursive: true })
+await fs.writeFile(
+  path.join(root, 'dist/admin/index.html'),
+  template
+    .replace('<!--app-head-->', () => '<title>Admin</title>\n    <meta name="robots" content="noindex, nofollow" />')
+    .replace('<!--app-html-->', ''),
+)
 
 // '/' only redirects to a language page (remembered choice, else browser language)
 const rootPage = `<!doctype html>

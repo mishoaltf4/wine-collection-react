@@ -1,26 +1,24 @@
 import { useEffect, useRef, useState } from 'react'
 
 // Items per view: 1 on mobile, 2 from md (768px), 3 from lg (1024px)
-function getPerView() {
-  if (window.matchMedia('(min-width: 1024px)').matches) return 3
-  if (window.matchMedia('(min-width: 768px)').matches) return 2
+function getPerView(max) {
+  if (window.matchMedia('(min-width: 1024px)').matches) return Math.min(3, max)
+  if (window.matchMedia('(min-width: 768px)').matches) return Math.min(2, max)
   return 1
 }
 
-const GAP = 28
-
-export default function Carousel({ items, renderItem, className = '', ...rest }) {
+export default function Carousel({ items, renderItem, maxPerView = 3, gap = 28, className = '', ...rest }) {
   // 3 on the server and first client render (must match prerendered HTML), real value right after mount
-  const [perView, setPerView] = useState(3)
+  const [perView, setPerView] = useState(maxPerView)
   const [index, setIndex] = useState(0)
   const touchStart = useRef(null)
 
   useEffect(() => {
-    const onResize = () => setPerView(getPerView())
+    const onResize = () => setPerView(getPerView(maxPerView))
     onResize()
     window.addEventListener('resize', onResize)
     return () => window.removeEventListener('resize', onResize)
-  }, [])
+  }, [maxPerView])
 
   const maxIndex = Math.max(0, items.length - perView)
   const current = Math.min(index, maxIndex)
@@ -45,9 +43,9 @@ export default function Carousel({ items, renderItem, className = '', ...rest })
         <div
           className="flex transition-transform duration-500 ease-out"
           style={{
-            gap: GAP,
-            transform: `translateX(calc(${current} * (-100% - ${GAP}px) / ${items.length}))`,
-            width: `calc(${(items.length / perView) * 100}% + ${(items.length / perView - 1) * GAP}px)`,
+            gap: gap,
+            transform: `translateX(calc(${current} * (-100% - ${gap}px) / ${items.length}))`,
+            width: `calc(${(items.length / perView) * 100}% + ${(items.length / perView - 1) * gap}px)`,
           }}
         >
           {items.map((item, i) => (

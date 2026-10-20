@@ -1,6 +1,6 @@
 import ka from './locales/ka.json'
 import en from './locales/en.json'
-import { upcomingEvents } from './data/home'
+import { localize, upcomingOf } from './events'
 import { facebookLink, instagramLink } from './data/links'
 import { LANGS } from './lang'
 
@@ -27,27 +27,27 @@ function organization(lang) {
   }
 }
 
-function events(lang) {
-  const t = dict[lang].UPCOMING_EVENTS.EVENTS
-  return upcomingEvents
-    .filter((e) => !e.dummy)
-    .map((e) => ({
+function events(lang, all) {
+  return upcomingOf(all).map((raw) => {
+    const e = localize(raw, lang)
+    return {
       '@context': 'https://schema.org',
       '@type': 'Event',
-      name: t[e.key].TITLE,
-      description: t[e.key].DESCRIPTION,
+      name: e.title,
+      description: e.description,
       startDate: `${e.year}-${pad(e.month + 1)}-${pad(e.day)}`,
       eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
       eventStatus: 'https://schema.org/EventScheduled',
-      location: { '@type': 'Place', name: t[e.key].PLACE, address: t[e.key].PLACE },
-      image: `${SITE_URL}${e.image}`,
+      location: { '@type': 'Place', name: e.place, address: e.place },
+      image: e.image,
       inLanguage: lang,
       organizer: { '@id': `${SITE_URL}/#organization` },
-    }))
+    }
+  })
 }
 
 // Tag descriptors shared by the prerender (-> HTML string) and the client (-> DOM updates on language switch)
-export function getSeoTags(lang) {
+export function getSeoTags(lang, allEvents = []) {
   const { TITLE: title, DESCRIPTION: description, SITE_NAME: siteName } = dict[lang].SEO
   const url = `${SITE_URL}/${lang}/`
   const image = `${SITE_URL}/og-image.jpg`
@@ -75,7 +75,7 @@ export function getSeoTags(lang) {
     meta({ name: 'twitter:title', content: title }),
     meta({ name: 'twitter:description', content: description }),
     meta({ name: 'twitter:image', content: image }),
-    ...[organization(lang), ...events(lang)].map((data) => ({
+    ...[organization(lang), ...events(lang, allEvents)].map((data) => ({
       tag: 'script',
       attrs: { type: 'application/ld+json' },
       // '<' escaped so the JSON can never close the script tag
@@ -87,8 +87,8 @@ export function getSeoTags(lang) {
 const escapeHtml = (s) => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;')
 
 // Prerender: markup for <head>
-export function seoToHtml(lang) {
-  return getSeoTags(lang)
+export function seoToHtml(lang, events) {
+  return getSeoTags(lang, events)
     .map(({ tag, attrs = {}, text }) => {
       const a = Object.entries(attrs).map(([k, v]) => ` ${k}="${escapeHtml(v)}"`).join('')
       if (tag === 'title') return `<title data-seo>${escapeHtml(text)}</title>`
@@ -99,10 +99,10 @@ export function seoToHtml(lang) {
 }
 
 // Client: replace the SEO tags when the language changes
-export function applySeo(lang) {
+export function applySeo(lang, events) {
   document.documentElement.lang = lang
   document.head.querySelectorAll('[data-seo]').forEach((el) => el.remove())
-  for (const { tag, attrs = {}, text } of getSeoTags(lang)) {
+  for (const { tag, attrs = {}, text } of getSeoTags(lang, events)) {
     if (tag === 'title') {
       document.title = text
       continue

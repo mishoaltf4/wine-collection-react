@@ -3,10 +3,13 @@ import { I18nextProvider } from 'react-i18next'
 import App from './App'
 import { createI18n } from './i18n'
 import { LangContext, langFromPath } from './lang'
+import { fetchEvents } from './api'
+import { EventsContext } from './events'
 import { applySeo } from './seo'
 
-export default function Root({ initialLang }) {
+export default function Root({ initialLang, initialEvents = [] }) {
   const [lang, setLangState] = useState(initialLang)
+  const [events, setEvents] = useState(initialEvents)
   const i18n = useMemo(() => createI18n(lang), [lang])
 
   // Each language has its own URL (/ka/, /en/); switching updates the URL without a reload
@@ -29,9 +32,14 @@ export default function Root({ initialLang }) {
     return () => window.removeEventListener('popstate', onPopState)
   }, [])
 
+  // The prerendered events can be stale, so refresh them from the API once the page is live
   useEffect(() => {
-    applySeo(lang)
-  }, [lang])
+    fetchEvents().then(setEvents).catch(() => {})
+  }, [])
+
+  useEffect(() => {
+    applySeo(lang, events)
+  }, [lang, events])
 
   // AOS touches `window` on import, so load it client-side only, after hydration
   useEffect(() => {
@@ -51,7 +59,9 @@ export default function Root({ initialLang }) {
   return (
     <LangContext value={value}>
       <I18nextProvider i18n={i18n}>
-        <App />
+        <EventsContext value={events}>
+          <App />
+        </EventsContext>
       </I18nextProvider>
     </LangContext>
   )

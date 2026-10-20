@@ -3,6 +3,6 @@ import Root from './Root.jsx'
 import { seoToHtml } from './seo'
 
 // Used by scripts/prerender.mjs
-export function render(lang) {
-  return { html: renderToString(<Root initialLang={lang} />), head: seoToHtml(lang) }
+export function render(lang, events = []) {
+  return { html: renderToString(<Root initialLang={lang} initialEvents={events} />), head: seoToHtml(lang, events) }
 }

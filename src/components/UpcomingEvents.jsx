@@ -1,14 +1,13 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { MONTH_KEYS, WEEKDAY_KEYS, upcomingEvents } from '../data/home'
+import { MONTH_KEYS, WEEKDAY_KEYS } from '../data/home'
 import { facebookLink } from '../data/links'
+import { localize, upcomingOf, useEvents } from '../events'
+import { useLang } from '../lang'
 import SectionBackground from './SectionBackground'
 import Divider from './Divider'
 
 const dateId = (year, month, day) => `${year}-${month}-${day}`
-
-// Festivals by date, so a calendar day can be checked in O(1)
-const eventsByDate = Object.fromEntries(upcomingEvents.map((e) => [dateId(e.year, e.month, e.day), e]))
 
 // Monday-first grid, null = empty cell
 function buildCalendar(year, month) {
@@ -19,14 +18,25 @@ function buildCalendar(year, month) {
 
 export default function UpcomingEvents() {
   const { t } = useTranslation()
-  const [selected, setSelected] = useState(upcomingEvents[0])
-  const [view, setView] = useState({ year: selected.year, month: selected.month })
+  const { lang } = useLang()
+  const events = useEvents()
+  const upcoming = upcomingOf(events).map((e) => localize(e, lang))
+  // Festivals by date, so a calendar day can be checked in O(1)
+  const eventsByDate = Object.fromEntries(upcoming.map((e) => [dateId(e.year, e.month, e.day), e]))
+
+  const [selectedId, setSelectedId] = useState(null)
+  const [pickedView, setView] = useState(null) // null until the visitor browses months
+  const selected = upcoming.find((e) => e.id === selectedId) ?? upcoming[0]
+  const now = new Date()
+  const view = pickedView ?? { year: selected?.year ?? now.getFullYear(), month: selected?.month ?? now.getMonth() }
 
   const cells = buildCalendar(view.year, view.month)
-  const ev = `UPCOMING_EVENTS.EVENTS.${selected.key}`
+  const monthName = (m) => t(`MONTHS.${MONTH_KEYS[m]}`)
+  const dateLabel = lang === 'ka' ? `${selected?.day} ${monthName(selected?.month)}` : `${monthName(selected?.month)} ${selected?.day}`
 
   const shiftMonth = (delta) =>
-    setView(({ year, month }) => {
+    setView(() => {
+      const { year, month } = view
       const d = new Date(year, month + delta, 1)
       return { year: d.getFullYear(), month: d.getMonth() }
     })
@@ -84,7 +94,7 @@ export default function UpcomingEvents() {
                 return (
                   <button
                     key={i}
-                    onClick={() => setSelected(festival)}
+                    onClick={() => setSelectedId(festival.id)}
                     aria-pressed={isSelected}
                     className={`${base} cursor-pointer text-white transition-colors duration-300 ${
                       isSelected ? 'bg-gold' : 'hover:bg-white/20'
@@ -97,28 +107,28 @@ export default function UpcomingEvents() {
             </div>
           </div>
 
-          <article data-aos="fade-left" data-aos-delay="150" className="flex flex-1 flex-col gap-6 rounded-sm bg-white/10 p-5 shadow-[0_12px_32px_rgba(15,42,74,0.15)] md:p-8">
+          {selected && <article data-aos="fade-left" data-aos-delay="150" className="flex min-w-0 flex-1 flex-col gap-6 wrap-break-word rounded-sm bg-white/10 p-5 shadow-[0_12px_32px_rgba(15,42,74,0.15)] md:p-8">
             <div className="flex flex-col gap-3">
               <p className="text-xs font-semibold uppercase text-gold">
-                {t(`${ev}.DATE`)} · {t(`${ev}.PLACE_SHORT`)}
+                {dateLabel} · {selected.placeShort}
               </p>
-              <h3 className="title-md font-display leading-[1.2] text-navy">{t(`${ev}.TITLE`)}</h3>
+              <h3 className="title-md font-display leading-[1.2] text-navy">{selected.title}</h3>
             </div>
             <Divider className="w-full" gold={false} />
-            <p className="text-[15px] leading-[1.6] text-fog">{t(`${ev}.DESCRIPTION`)}</p>
+            <p className="text-[15px] leading-[1.6] text-fog">{selected.description}</p>
             <Divider className="w-full" gold={false} />
             <div className="relative h-55 overflow-hidden rounded-sm">
               <img
-                key={selected.key}
+                key={selected.id}
                 src={selected.image}
-                alt={t(`${ev}.TITLE`)}
+                alt={selected.title}
                 loading="lazy"
                 decoding="async"
                 className="size-full object-cover"
               />
-              <div className="absolute bottom-4 left-4 rounded-sm bg-white/70 px-3.5 py-2.5 text-navy shadow-[0_4px_12px_rgba(15,42,74,0.12)]">
+              <div className="absolute bottom-4 left-4 max-w-[calc(100%-2rem)] rounded-sm bg-white/70 px-3.5 py-2.5 text-navy shadow-[0_4px_12px_rgba(15,42,74,0.12)]">
                 <p className="text-[11px] font-semibold uppercase font-features-['case']">{t('COMMON.PLACE')}</p>
-                <p className="text-[15px] font-semibold">{t(`${ev}.PLACE`)}</p>
+                <p className="text-[15px] font-semibold">{selected.place}</p>
               </div>
             </div>
             <a
@@ -129,7 +139,7 @@ export default function UpcomingEvents() {
             >
               {t('COMMON.SEE_MORE')}
             </a>
-          </article>
+          </article>}
         </div>
       </div>
     </section>

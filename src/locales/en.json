@@ -43,23 +43,7 @@
     "SUBTITLE": "Wine Collection of Georgia connects winemakers, professionals and wine lovers through festivals, tastings and cultural projects - celebrating Georgian wine and creating opportunities for collaboration"
   },
   "UPCOMING_EVENTS": {
-    "TITLE": "Explore Our Events",
-    "EVENTS": {
-      "EVENT_1": {
-        "TITLE": "Sighnaghi Autumn Festival - SignWine",
-        "DATE": "October 31",
-        "PLACE": "City of Sighnaghi",
-        "PLACE_SHORT": "Sighnaghi",
-        "DESCRIPTION": "Discover Georgian wines and meet their makers in the heart of Sighnaghi. SignWine 2026 brings together wine tastings, regional gastronomy, a professional forum and cultural experiences for a celebration of autumn."
-      },
-      "EVENT_2": {
-        "TITLE": "Winter Wine Festival (dummy)",
-        "DATE": "December 11",
-        "PLACE": "Tbilisi, Georgia",
-        "PLACE_SHORT": "Tbilisi",
-        "DESCRIPTION": "Dummy event for testing the calendar. Replace this text with the real festival description."
-      }
-    }
+    "TITLE": "Explore Our Events"
   },
   "WHAT_WE_DO": {
     "TITLE": "What We Do",
@@ -87,25 +71,7 @@
     "CONTENT": "Our projects are developed with the support of the Ministry of Environmental Protection and Agriculture of Georgia and the National Wine Agency, alongside municipalities and cultural institutions across Georgia. These partnerships bring together national expertise, local knowledge and cultural perspectives, strengthening our work in promoting Georgian wine in Georgia and internationally."
   },
   "PAST_EVENTS": {
-    "TITLE": "Our Previous Festivals:",
-    "PAST_EVENTS_LIST": {
-      "PAST_EVENT_1": {
-        "DATE": "28 June, 2025 • Batumi, Georgia",
-        "TITLE": "Adjara Seaside Wine Festival 2025"
-      },
-      "PAST_EVENT_2": {
-        "DATE": "22 November, 2025 • Sighnaghi, Georgia",
-        "TITLE": "Sighnaghi Autumn Festival - SignWine 2025"
-      },
-      "PAST_EVENT_3": {
-        "DATE": "4 April, 2026 • Mephis Kalaki, Kaspi, Georgia",
-        "TITLE": "Japanese-Georgian Wine Symposium 2026"
-      },
-      "PAST_EVENT_4": {
-        "DATE": "3 July, 2026 • Castello Mare, Tsikhisdziri, Georgia",
-        "TITLE": "Adjara Seaside Wine Festival 2026"
-      }
-    }
+    "TITLE": "Our Previous Festivals:"
   },
   "PARTNERS": {
     "TITLE": "Our Partner Wineries",
