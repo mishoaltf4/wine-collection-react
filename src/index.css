@@ -50,6 +50,26 @@ html[lang='ka'] {
   --font-sans: 'Noto Sans Georgian', sans-serif;
 }
 
+/*
+  Fluid title sizes. Georgian letters are wider, so every title has a smaller Georgian size
+  (about 73% of the English one, same ratio as the hero: 60px -> 44px).
+  Driven by html[lang] in CSS, so no component className changes on language switch
+  (that would break AOS, which adds its own classes to the same elements).
+*/
+@layer components {
+  .title-hero { font-size: clamp(1.75rem, 7vw, 3.75rem); }
+  .title-xl { font-size: clamp(2.25rem, 6vw, 3.5rem); }
+  .title-lg { font-size: clamp(1.875rem, 5vw, 2.75rem); }
+  .title-md { font-size: clamp(1.875rem, 4.5vw, 2.5rem); }
+  .title-sm { font-size: clamp(1.875rem, 4vw, 2.25rem); }
+
+  html[lang='ka'] .title-hero { font-size: clamp(1.375rem, 5.5vw, 2.75rem); }
+  html[lang='ka'] .title-xl { font-size: clamp(1.75rem, 4.4vw, 2.5rem); }
+  html[lang='ka'] .title-lg { font-size: clamp(1.375rem, 3.7vw, 2rem); }
+  html[lang='ka'] .title-md { font-size: clamp(1.375rem, 3.3vw, 1.8rem); }
+  html[lang='ka'] .title-sm { font-size: clamp(1.25rem, 3vw, 1.625rem); }
+}
+
 html {
   scroll-behavior: smooth;
 }

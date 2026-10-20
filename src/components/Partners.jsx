@@ -15,7 +15,7 @@ export default function Partners() {
       <div className="relative mx-auto flex max-w-310 flex-col gap-12">
         <div className="flex flex-col gap-4">
           <div data-aos="fade-up" className="flex flex-col gap-4">
-            <h2 className="font-display text-3xl text-gold md:text-[44px]">{t('PARTNERS.TITLE')}</h2>
+            <h2 className="title-lg font-display text-gold">{t('PARTNERS.TITLE')}</h2>
             <Divider className="w-15" />
             <p className="max-w-3xl text-[15px] leading-[1.7] text-white/70">{t('PARTNERS.CONTENT')}</p>
           </div>

@@ -11,7 +11,7 @@ export default function About() {
       <SectionBackground />
       <div className="relative mx-auto flex max-w-310 flex-col gap-8">
         <div data-aos="fade-up" className="flex flex-col gap-4">
-          <h2 className="font-display text-3xl leading-[1.2] text-white md:text-[44px]">{t('WHAT_WE_DO.TITLE')}</h2>
+          <h2 className="title-lg font-display leading-[1.2] text-white">{t('WHAT_WE_DO.TITLE')}</h2>
           <Divider className="w-20" />
           <p className="max-w-3xl text-[15px] leading-[1.7] text-white">{t('WHAT_WE_DO.SUBTITLE')}</p>
         </div>
@@ -32,7 +32,7 @@ export default function About() {
 
         <p data-aos="fade-up" className="text-[15px] leading-[1.7] text-white">{t('WHAT_WE_DO.INFO_1')}</p>
 
-        <h3 data-aos="fade-up" className="mt-4 font-display text-3xl leading-[1.4] text-white md:text-4xl">{t('PAST_EVENTS.TITLE')}</h3>
+        <h3 data-aos="fade-up" className="mt-4 title-sm font-display leading-[1.4] text-white">{t('PAST_EVENTS.TITLE')}</h3>
 
         <div className="grid gap-5 md:grid-cols-2">
           {pastEvents.map((e, i) => {

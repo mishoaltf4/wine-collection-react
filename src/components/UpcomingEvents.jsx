@@ -39,16 +39,16 @@ export default function UpcomingEvents() {
       <SectionBackground />
       <div className="relative mx-auto flex max-w-310 flex-col gap-12">
         <div className="flex flex-col gap-4">
-          <h2 data-aos="fade-up" className="font-display text-3xl text-gold md:text-[44px]">{t('UPCOMING_EVENTS.TITLE')}</h2>
+          <h2 data-aos="fade-up" className="title-lg font-display text-gold">{t('UPCOMING_EVENTS.TITLE')}</h2>
           <Divider className="w-full" gold={false} />
         </div>
 
         <div className="flex flex-col gap-12 lg:flex-row">
           <div data-aos="fade-right" className="flex w-full flex-col gap-6 lg:w-130 lg:shrink-0">
             <div className="flex flex-col gap-4">
-              <div className="flex items-end justify-between font-display">
-                <span className="text-4xl text-white md:text-[56px]">{t(`MONTHS.${MONTH_KEYS[view.month]}`)}</span>
-                <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-end justify-between gap-x-4 gap-y-2 font-display">
+                <span className="title-xl text-white">{t(`MONTHS.${MONTH_KEYS[view.month]}`)}</span>
+                <div className="flex shrink-0 items-center gap-2">
                   <button className={arrow} onClick={() => shiftMonth(-1)} aria-label="Previous month">
                     ‹
                   </button>
@@ -102,7 +102,7 @@ export default function UpcomingEvents() {
               <p className="text-xs font-semibold uppercase text-gold">
                 {t(`${ev}.DATE`)} · {t(`${ev}.PLACE_SHORT`)}
               </p>
-              <h3 className="font-display text-3xl leading-[1.2] text-navy md:text-[40px]">{t(`${ev}.TITLE`)}</h3>
+              <h3 className="title-md font-display leading-[1.2] text-navy">{t(`${ev}.TITLE`)}</h3>
             </div>
             <Divider className="w-full" gold={false} />
             <p className="text-[15px] leading-[1.6] text-fog">{t(`${ev}.DESCRIPTION`)}</p>
