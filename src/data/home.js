@@ -9,7 +9,9 @@ import event1 from '../assets/images/home/past-events/event-1.jpg'
 import event2 from '../assets/images/home/past-events/event-2.jpg'
 import event3 from '../assets/images/home/past-events/event-3.jpg'
 import event4 from '../assets/images/home/past-events/event-4.jpg'
-import wineryPhoto from '../assets/images/home/something.webp'
+import qvevri from '../assets/images/home/qvevri.png'
+import deduleti from '../assets/images/home/deduleti.png'
+import bakurveli from '../assets/images/home/bakurveli.png'
 import eventImage from '../assets/images/home/event-31-oct.webp'
 import dummyEventImage from '../assets/images/home/event.webp'
 
@@ -33,10 +35,9 @@ export const pastEvents = [
 
 // Placeholder winery data - not in the locale files yet
 export const wineries = [
-  { id: 1, region: 'Kakheti', name: 'Winery #1', image: wineryPhoto },
-  { id: 2, region: 'Imereti', name: 'Winery #2', image: wineryPhoto },
-  { id: 3, region: 'Kartli', name: 'Winery #3', image: wineryPhoto },
-  { id: 4, region: 'Kartli', name: 'Winery #3', image: wineryPhoto },
+  { id: 3, region: 'Gurdjaani', name: 'Bakurveli', image: bakurveli },
+  { id: 1, region: 'Kakheti', name: 'Qvevri', image: qvevri },
+  { id: 2, region: 'Imereti', name: 'Deduleti', image: deduleti },
 ]
 
 // Festivals shown in the calendar. `key` maps to UPCOMING_EVENTS.EVENTS in the locale files,
