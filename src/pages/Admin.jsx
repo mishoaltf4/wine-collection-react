@@ -326,14 +326,36 @@ export default function Admin() {
 
   const wrap = (children) => (
     <div className="flex min-h-screen flex-col font-sans text-white">
-      <header className="sticky top-0 z-40 flex h-20 items-center gap-3 bg-navy px-5 lg:px-10">
-        <img src={logo} alt="" className="size-10 rounded-full" />
-        <span className="font-brand text-base font-semibold text-gold">Wine Collection of Georgia</span>
+      <header className="sticky top-0 z-40 bg-navy max-lg:px-5 lg:px-10 2xl:px-20">
+        <div className="flex h-20 items-center justify-between gap-6 lg:h-25">
+          <a href="/" className="flex shrink-0 items-center gap-3 lg:gap-4">
+            <img src={logo} alt="Wine Collection of Georgia" className="size-10 rounded-full lg:size-12" />
+            <span className="hidden font-brand text-base font-semibold text-gold min-[500px]:block 2xl:text-xl">
+              Wine Collection of Georgia
+            </span>
+          </a>
+          <a
+            href="/"
+            className="rounded-sm bg-gold px-4 py-2 text-xs font-semibold uppercase text-white transition hover:brightness-110"
+          >
+            Back to site
+          </a>
+        </div>
       </header>
-      <main className="relative flex-1 overflow-hidden px-5 py-10 md:px-10 lg:py-16">
+      <main className="relative flex-1 overflow-hidden px-5 py-16 md:px-10 lg:py-25">
         <SectionBackground />
         <div className="relative">{children}</div>
       </main>
+      <footer className="bg-navy px-5 py-10 md:px-10">
+        <div className="mx-auto flex max-w-310 flex-col items-center gap-6">
+          <div className="flex items-center gap-4">
+            <img src={logo} alt="" className="size-10 rounded-full" />
+            <p className="font-brand text-xl text-white">Wine Collection Of Georgia</p>
+          </div>
+          <div className="h-px w-full bg-white/15" />
+          <p className="text-center text-xs text-white/50">© {new Date().getFullYear()} Wine Collection of Georgia</p>
+        </div>
+      </footer>
     </div>
   )
 
@@ -341,8 +363,11 @@ export default function Admin() {
 
   return wrap(
     <div className="mx-auto flex max-w-4xl flex-col gap-6">
-      <div className="flex items-center justify-between">
-        <h1 className="title-lg font-display text-gold">Events admin</h1>
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="flex flex-col gap-4">
+          <h1 className="title-lg font-display text-gold">Events admin</h1>
+          <Divider className="w-20" />
+        </div>
         <div className="flex gap-3">
           {!editing && <button onClick={() => setEditing({})} className={`${button} bg-navy text-gold`}>Add event</button>}
           <button onClick={logout} className={`${button} ${secondary}`}>Log out</button>
